@@ -18,9 +18,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-/**
- * Created by MajidAlashari on 10/15/2017.
- */
 
 public class GPSTracker extends Service {
 
@@ -56,7 +53,7 @@ public class GPSTracker extends Service {
 // 10 meters
     // The minimum time between updates in milliseconds
 
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
 
 // 1 minute
     // Declaring a Location Manager
@@ -158,7 +155,7 @@ public class GPSTracker extends Service {
     }
 
 
-    /**     * Stop using GPS listener
+    /**     * Stopp using GPS listener
 
      * Calling this function will stop using GPS in your app.     */
 
