@@ -40,54 +40,6 @@ public class MainActivity extends AppCompatActivity
         //SANAD//
         myPrayerList = (ListView) findViewById(R.id.myPrayerList);
         mContext = this;
-//        setMyPrayerList(latitude,longitude,prayerNamez,prayerTimez);
-        /////////
-
-
-        //GPS_BUTTON//
-//        Button gpsBtn = (Button) findViewById(R.id.gpsBtn);
-//        gpsBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                if (ContextCompat.checkSelfPermission(mContext,
-//                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//
-//                        && ActivityCompat.checkSelfPermission(mContext,
-//                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(MainActivity.this,
-//                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-//
-//                } else {
-//                    Toast.makeText(mContext, "You need have granted permission", Toast.LENGTH_SHORT).show();
-//                    GPSTracker gps = new GPSTracker(mContext, MainActivity.this);
-//
-//                    // Check if GPS enabled
-//
-//                    if (gps.canGetLocation()) {
-//
-//                        latitude = gps.getLatitude();
-//                        longitude = gps.getLongitude();
-//
-//                        // \n is for new line
-//
-//                        Toast.makeText(getApplicationContext(),
-//                                "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-//                    } else {
-//
-//                        // Can't get location.
-//
-//                        // GPS or network is not enabled.
-//
-//                        // Ask user to enable GPS/network in settings.
-//
-//                        gps.showSettingsAlert();
-//                    }
-//                }
-//                //setMyPrayerList(latitude,longitude,prayerNamez,prayerTimez);
-//
-//            }
-//        });
         //////////////
 
 
@@ -194,6 +146,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            SettingsFragment fragment = new SettingsFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container,fragment);
+            fragmentTransaction.commit();
             return true;
         }
 
@@ -206,7 +162,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_main) {
             //Initialize MainFragment
             MainFragment fragment = new MainFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -214,12 +170,7 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
             //
         } else if (id == R.id.nav_gallery) {
-            //Initialize MainFragment
-            GalleryFragment fragment = new GalleryFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,fragment);
-            fragmentTransaction.commit();
-            //
+
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
