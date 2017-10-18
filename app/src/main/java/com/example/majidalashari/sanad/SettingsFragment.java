@@ -3,8 +3,10 @@ package com.example.majidalashari.sanad;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
+
 
 
 /**
@@ -32,19 +35,31 @@ public class SettingsFragment extends Fragment {
 
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.fragment_settings, container, false);
-
-
         Button gpsBtn = (Button) v.findViewById(R.id.gpsBtn);
+
         gpsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                requestGPSFragment();
+
+                showGPSDialog(v);
+//                requestGPSFragment();
                 //setMyPrayerList(latitude,longitude,prayerNamez,prayerTimez);
 
             }
         });
         return v;
+    }
+
+
+    //methods:
+
+
+    public void showGPSDialog(View v){
+        android.app.FragmentManager manager = getActivity().getFragmentManager();
+        GPSPopup gpsPopup = new GPSPopup();
+        gpsPopup.show(manager,"GPSPopup");
+        //this is used to get dialog from within a fragment
     }
 
     @Override
@@ -96,6 +111,7 @@ public class SettingsFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void requestGPSFragment(){
         if (checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
