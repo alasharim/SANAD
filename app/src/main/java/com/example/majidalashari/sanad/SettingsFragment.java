@@ -1,20 +1,14 @@
 package com.example.majidalashari.sanad;
 
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
+//import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
-
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 
 
@@ -41,10 +35,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-
                 showGPSDialog(v);
-//                requestGPSFragment();
-                //setMyPrayerList(latitude,longitude,prayerNamez,prayerTimez);
 
             }
         });
@@ -56,96 +47,12 @@ public class SettingsFragment extends Fragment {
 
 
     public void showGPSDialog(View v){
-        android.app.FragmentManager manager = getActivity().getFragmentManager();
+        FragmentManager manager = getActivity().getSupportFragmentManager();
         GPSPopup gpsPopup = new GPSPopup();
         gpsPopup.show(manager,"GPSPopup");
         //this is used to get dialog from within a fragment
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-
-                if (grantResults.length > 0
-
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    GPSTracker gps = new GPSTracker(getActivity(), getActivity());
-
-                    // Check if GPS enabled
-
-                    if (gps.canGetLocation()) {
-
-                        double latitude = gps.getLatitude();
-                        double longitude = gps.getLongitude();
-
-                        // \n is for new line
-
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                    } else {
-                        // Can't get location.
-
-                        // GPS or network is not enabled.
-
-                        // Ask user to enable GPS/network in settings.
-
-                        gps.showSettingsAlert();
-                    }
-
-                } else {
-
-                    // permission denied, boo! Disable the
-
-                    // functionality that depends on this permission.
-                    Toast.makeText(getActivity(), "You need to grant permission", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void requestGPSFragment(){
-        if (checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-
-                && checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-
-        } else {
-            Toast.makeText(getActivity(), "You need have granted permission", Toast.LENGTH_SHORT).show();
-            GPSTracker gps = new GPSTracker(getActivity(), getActivity());
-
-            // Check if GPS enabled
-            if (gps.canGetLocation()) {
-
-                latitude = gps.getLatitude();
-                longitude = gps.getLongitude();
-
-                // \n is for new line
-
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-            } else {
-
-                // Can't get location.
-
-                // GPS or network is not enabled.
-
-                // Ask user to enable GPS/network in settings.
-
-                gps.showSettingsAlert();
-            }
-        }
-    }
 
 
 }
