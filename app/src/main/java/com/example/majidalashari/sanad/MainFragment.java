@@ -1,160 +1,93 @@
 package com.example.majidalashari.sanad;
 
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ListView;
 
-import static android.support.v4.content.PermissionChecker.checkSelfPermission;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
-    double longitude = 0;
-    double latitude = 0;
-    String longitudeString = null;
-    String latitudeString = null;
 
-    boolean bundleCheck = false;
+    AppController appController = AppController.getInstance();
+    ListView myPrayerList;
+    MainFragment mContext;
+    String[] prayerNamez = new String[5];
+    String[] prayerTimez = new String[5];
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        Bundle bundle = getArguments();
-        if (bundle != null){
-            longitudeString = bundle.getString("Longitude");
-            latitudeString = bundle.getString("Latitude");
-            Toast.makeText(getContext(),"Lat: " + latitudeString + ", Lon: " + longitudeString,Toast.LENGTH_LONG).show();
-        }
+        myPrayerList = (ListView) view.findViewById(R.id.myPrayerList);
+//        mContext = this;
+        setMyPrayerList(appController.latitude,appController.longitude,prayerNamez,prayerTimez);
 
 
-
-//        if (!bundleCheck){
-//            requestGPSFragment(longitude,latitude);
-//        }else {
-
-
-            //getting GPS coords from "SettingsFragment/GPSPopup"
-//            Bundle extras = get
-//            Bundle bundle = getArguments();
-//        if (bundle == null){
-//            Toast.makeText(getActivity(),"bundle is NULL",Toast.LENGTH_LONG).show();
-//        }else{
-//            Toast.makeText(getActivity(),"bundle is NOT NULL",Toast.LENGTH_LONG).show();
-//
-//            longitudeString = bundle.getString("Longitude");
-//            latitudeString = bundle.getString("Latitude");
-//
-//            longitude = Double.parseDouble(longitudeString);
-//            latitude = Double.parseDouble(latitudeString);
-//        }
-//        ////////////////////////////////////////////////////
-//        bundleCheck = true;
-        // Inflate the layout for this fragment
         return view;
     }
 
 
+    public void setMyPrayerList(double latitude, double longitude,String[] prayerNamez, String[] prayerTimez){
+//        String[] prayerNamez;
+//        String[] prayerTimez;
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        double timezone = (Calendar.getInstance().getTimeZone()
+                .getOffset(Calendar.getInstance().getTimeInMillis()))
+                / (1000 * 60 * 60);
+        PrayTime prayers = new PrayTime();
 
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
 
-                if (grantResults.length > 0
 
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        prayers.setTimeFormat(appController.timeFormat);
+        prayers.setCalcMethod(appController.calculationMethod);
+        prayers.setAsrJuristic(appController.juristicMethod);
+        prayers.setAdjustHighLats(appController.adjustMethodForHigherLat);
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    GPSTracker gps = new GPSTracker(getActivity(), (FragmentActivity) getActivity());
 
-                    // Check if GPS enabled
 
-                    if (gps.canGetLocation()) {
+        int[] offsets = { 0, 0, 0, 0, 0, 0, 0 }; // {Fajr,Sunrise,Dhuhr,Asr,Sunset,Maghrib,Isha}
+        prayers.tune(offsets);
 
-                        double latitude = gps.getLatitude();
-                        double longitude = gps.getLongitude();
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
 
-                        // \n is for new line
+        ArrayList prayerTimes = prayers.getPrayerTimes(cal, latitude,
+                longitude, timezone);
+        ArrayList prayerNames = prayers.getTimeNames();
 
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                    } else {
-                        // Can't get location.
+                /* **********ListView********** */
+//        prayerNamez = new String[5];
+//        prayerTimez = new String[5];
 
-                        // GPS or network is not enabled.
-
-                        // Ask user to enable GPS/network in settings.
-
-                        gps.showSettingsAlert();
-                    }
-
-                } else {
-
-                    // permission denied, boo! Disable the
-
-                    // functionality that depends on this permission.
-                    Toast.makeText(getActivity(), "You need to grant permission", Toast.LENGTH_SHORT).show();
-                }
-            }
+        for (int i = 0,j = 0;(i+j) < prayerNames.size();i++){
+            if ((i + j) == 1 ||  (i + j) == 4)
+                j++;
+            prayerNamez[i] = (String) prayerNames.get(i+j);
+            prayerTimez[i] = (String) prayerTimes.get(i+j);
         }
-    }
+        ///ADAPTER
+        ItemAdapter itemAdapter = new ItemAdapter(getActivity(),prayerNamez,prayerTimez);
+        myPrayerList.setAdapter(itemAdapter);
+
+    };
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void requestGPSFragment(double longitude, double latitude){
-        if (checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
 
-                && checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-
-        } else {
-            Toast.makeText(getActivity(), "You need have granted permission", Toast.LENGTH_SHORT).show();
-            GPSTracker gps = new GPSTracker(getActivity(), (FragmentActivity) getActivity());
-
-            // Check if GPS enabled
-            if (gps.canGetLocation()) {
-
-                latitude = gps.getLatitude();
-                longitude = gps.getLongitude();
-
-                // \n is for new line
-
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-            } else {
-
-                // Can't get location.
-
-                // GPS or network is not enabled.
-
-                // Ask user to enable GPS/network in settings.
-
-                gps.showSettingsAlert();
-            }
-
-            this.longitude = longitude;
-            this.latitude = latitude;
-        }
-    }
 
 }

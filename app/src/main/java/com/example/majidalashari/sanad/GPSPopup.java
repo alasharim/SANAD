@@ -21,9 +21,11 @@ import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public class GPSPopup extends DialogFragment implements View.OnClickListener {
     @Nullable
+
+    AppController appController = AppController.getInstance();
     Button automaticBtn, manualBtn;
-    private double longitude = 1;
-    private double latitude = 1;
+//    private double longitude = 1;
+//    private double latitude = 1;
 
     private String longitudeString = "1";
     private String latitudeString = "1";
@@ -34,6 +36,7 @@ public class GPSPopup extends DialogFragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.gps_popup_dialog,null);
         automaticBtn = (Button) view.findViewById(R.id.automaticBtn);
         manualBtn = (Button) view.findViewById(R.id.manualBtn);
+        Toast.makeText(getActivity(), appController.latitude + "" + appController.longitude, Toast.LENGTH_SHORT).show();
         //for switch "Line 29" to work "line 20-21" must be added
         assert automaticBtn != null;
         automaticBtn.setOnClickListener(this);
@@ -50,10 +53,10 @@ public class GPSPopup extends DialogFragment implements View.OnClickListener {
             case (R.id.automaticBtn):
 
 //                Toast.makeText(getActivity(),"Automatic Location",Toast.LENGTH_LONG).show();
-                requestGPSFragment(longitude,latitude);
+                requestGPSFragment(appController.longitude,appController.latitude);
 
-                longitudeString = String.valueOf(longitude);
-                latitudeString = String.valueOf(latitude);
+                longitudeString = String.valueOf(appController.longitude);
+                latitudeString = String.valueOf(appController.latitude);
 
 //                SettingsFragment settingsFragment = new SettingsFragment();
 //                Bundle bundle = new Bundle();
@@ -68,7 +71,7 @@ public class GPSPopup extends DialogFragment implements View.OnClickListener {
                 bundle.putString("Latitude",latitudeString);
                 mainFragment.setArguments(bundle);
                 FragmentManager manager = getActivity().getSupportFragmentManager();
-                manager.beginTransaction().replace(R.id.myPrayerList, mainFragment).commit();
+                manager.beginTransaction().replace(R.id.fragment_container, mainFragment).commit();
 
 //                Bundle bundle = new Bundle();
 //                //attempting to pass data outside the fragment
@@ -192,8 +195,8 @@ public class GPSPopup extends DialogFragment implements View.OnClickListener {
                 gps.showSettingsAlert();
             }
 
-            this.longitude = longitude;
-            this.latitude = latitude;
+            appController.longitude = longitude;
+            appController.latitude = latitude;
         }
     }
 
