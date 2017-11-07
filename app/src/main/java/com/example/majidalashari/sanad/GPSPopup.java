@@ -1,6 +1,7 @@
 package com.example.majidalashari.sanad;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +36,25 @@ public class GPSPopup extends DialogFragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.gps_popup_dialog,null);
         automaticBtn = (Button) view.findViewById(R.id.automaticBtn);
         manualBtn = (Button) view.findViewById(R.id.manualBtn);
-        Toast.makeText(getActivity(), appController.latitude + "" + appController.longitude, Toast.LENGTH_SHORT).show();
+
         //for switch "Line 29" to work "line 20-21" must be added
         assert automaticBtn != null;
         automaticBtn.setOnClickListener(this);
         assert manualBtn != null;
         manualBtn.setOnClickListener(this);
+
+//        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+//            @Override
+//            public void onBackStackChanged() {
+//                if (getView()!=null){
+//                    getView().setFocusableInTouchMode(true);
+//                    getView().requestFocus();
+//                }
+//            }
+//        });
+
+
+
         return view;
     }
 
@@ -51,65 +64,35 @@ public class GPSPopup extends DialogFragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case (R.id.automaticBtn):
-
-//                Toast.makeText(getActivity(),"Automatic Location",Toast.LENGTH_LONG).show();
-                requestGPSFragment(appController.longitude,appController.latitude);
-
-                longitudeString = String.valueOf(appController.longitude);
-                latitudeString = String.valueOf(appController.latitude);
-
-//                SettingsFragment settingsFragment = new SettingsFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("Longitude",longitudeString);
-//                bundle.putString("Latitude",latitudeString);
-//                settingsFragment.setArguments(bundle);
-//                FragmentManager manager = getFragmentManager();
-//                manager.beginTransaction().replace(R.id.settingsLayout, settingsFragment).commit();
-                MainFragment mainFragment = new MainFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("Longitude",longitudeString);
-                bundle.putString("Latitude",latitudeString);
-                mainFragment.setArguments(bundle);
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                manager.beginTransaction().replace(R.id.fragment_container, mainFragment).commit();
-
-//                Bundle bundle = new Bundle();
-//                //attempting to pass data outside the fragment
-//                bundle.putString("Longitude",longitudeString);
-//                bundle.putString("Latitude",latitudeString);
-//
-//
-//                android.support.v4.app.FragmentManager fragmentManager = getChildFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                //inflate second fragment//
-//
-//                MainFragment mainFragment = new MainFragment();
-//                mainFragment.setArguments(bundle);
-//
-//
-////                fragmentTransaction.replace(R.id.fragment_container,mainFragment);
-////                fragmentTransaction.commit();
-//                SettingsFragment settingsfragment = new SettingsFragment();
-//                settingsfragment.setArguments(bundle);
-////
-//
-//                fragmentTransaction.replace(R.id.fragment_container,settingsfragment);
-//                fragmentTransaction.commit();
+                requestGPSFragment();
                 getDialog().dismiss();
-                ////////////////////////////
+                break;
 
-                break;
             case (R.id.manualBtn):
-                Toast.makeText(getActivity(),"Manual Location",Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(),"Manual Location",Toast.LENGTH_LONG).show();
+//                showManualGPSFragment();
+//                showDialog();
+                startActivity(new Intent(getActivity(),ManualGPSFragment.class));
+                getDialog().dismiss();
                 break;
+
             default:
                 Toast.makeText(getActivity(),"Default ERROR",Toast.LENGTH_LONG).show();
                 break;
 
-            /////////////////////////////////////
         }
+
     }
 
+    public void showManualGPSFragment(){
+//        FragmentManager manager = getActivity().getSupportFragmentManager();
+//        ManualGPSFragment manualGPSFragment = new ManualGPSFragment();
+//        manualGPSFragment.show(manager,"ManualGPSFragment");
+
+//        startActivity(new Intent(GPSPopup.this,ManualGPSFragment.class));
+
+        //this is used to get dialog from within a fragment
+    }
 
 
     @Override
@@ -162,7 +145,9 @@ public class GPSPopup extends DialogFragment implements View.OnClickListener {
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void requestGPSFragment(double longitude, double latitude){
+    public void requestGPSFragment(){
+        double longitude = 0.0;
+        double latitude = 0.0;
         if (checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
 
@@ -199,5 +184,6 @@ public class GPSPopup extends DialogFragment implements View.OnClickListener {
             appController.latitude = latitude;
         }
     }
+
 
 }

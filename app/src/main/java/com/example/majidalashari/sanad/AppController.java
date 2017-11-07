@@ -12,33 +12,34 @@ class AppController {
     // ------------------------------------------------------------
     // Calculation Methods
     int calculationMethod = prayTime.Makkah;
-//        int Jafari; // Ithna Ashari
-//        int Karachi; // University of Islamic Sciences, Karachi
-//        int ISNA; // Islamic Society of North America (ISNA)
-//        int MWL; // Muslim World League (MWL)
-//        int Makkah; // Umm al-Qura, Makkah
-//        int Egypt; // Egyptian General Authority of Survey
-//        int Custom; // Custom Setting
-//        int Tehran; // Institute of Geophysics, University of Tehran
+//        Jafari-----------Ithna Ashari
+//        Karachi----------University of Islamic Sciences, Karachi
+//        ISNA-------------Islamic Society of North America (ISNA)
+//        MWL--------------Muslim World League (MWL)
+//        Makkah-----------Umm al-Qura, Makkah
+//        Egypt------------Egyptian General Authority of Survey
+//        Custom-----------Custom Setting
+//        Tehran-----------Institute of Geophysics, University of Tehran
 
     // Juristic Methods
     int juristicMethod = prayTime.Shafii;
-//        int Shafii; // Shafii (standard)
-//        int Hanafi; // Hanafi
+//        Shafii-----------Shafii (standard)
+//        Hanafi-----------Hanafi
 
     // Adjusting Methods for Higher Latitudes
     int adjustMethodForHigherLat = prayTime.AngleBased;
-//        int None; // No adjustment
-//        int MidNight; // middle of night
-//        int OneSeventh; // 1/7th of night
-//        int AngleBased; // angle/60th of night
+//        None-------------No adjustment
+//        MidNight---------middle of night
+//        OneSeventh-------1/7th of night
+//        AngleBased-------angle/60th of night
 
     // Time Formats
     int timeFormat = prayTime.Time12;
-//        int Time24; // 24-hour format
-//        int Time12; // 12-hour format
-//        int Time12NS; // 12-hour format with no suffix
-//        int Floating; // floating point number
+    //        Time24-----------24-hour format
+//        Time12-----------12-hour format
+//        Time12NS---------2-hour format with no suffix
+//        Floating---------Floating point number
+// ------------------------------------------------------------
     static AppController getInstance() {
         return ourInstance;
     }

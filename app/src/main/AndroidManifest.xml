@@ -24,6 +24,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ManualGPSFragment"
+            android:allowEmbedded="true">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"></action>-->
+            <!--</intent-filter>-->
+
+
+            </activity>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBRotoVeIsO3huzGJ0MEQdI204G9lwLLmk" />
     </application>
 
 </manifest>
